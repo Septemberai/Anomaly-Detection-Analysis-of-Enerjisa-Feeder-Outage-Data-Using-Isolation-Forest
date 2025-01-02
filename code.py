@@ -299,7 +299,25 @@ Select feeders that need maintenance and track completed maintenance activities.
 # Create two columns for side-by-side display
 col1, col2 = st.columns(2)
 
-# First column: Feeder selection and maintenance
+class YourSystem:
+    def __init__(self):
+        self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
+
+    def perform_maintenance(self, feeder):
+        if self.maintenance_done is None:
+            self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
+
+        new_data = {"Feeder": feeder, "Timestamp": pd.Timestamp.now()}
+        self.maintenance_done = pd.concat([self.maintenance_done, pd.DataFrame([new_data])], ignore_index=True)
+
+# Streamlit session state initialization
+if "system" not in st.session_state:
+    st.session_state.system = YourSystem()
+
+# Example UI
+feeder_names = ["Feeder1", "Feeder2", "Feeder3"]  # Dummy feeder names
+col1, col2 = st.columns(2)
+
 with col1:
     st.subheader("Add to Maintenance List")
     if feeder_names:
@@ -310,19 +328,12 @@ with col1:
     else:
         st.info("No feeders require maintenance.")
 
-# Second column: Maintenance history
 with col2:
     st.subheader("Maintenance List")
-    if st.session_state.system.maintenance_done is not None and not st.session_state.system.maintenance_done.empty:
+    if not st.session_state.system.maintenance_done.empty:
         st.dataframe(st.session_state.system.maintenance_done)
     else:
         st.write("No Feeder in Maintenance List.")
-
-
-st.header("Project Dependencies")
-st.write("""
-This section shows the core Python packages used in this project.
-""")
 
 # List of specific packages to show in the display
 core_packages = [
