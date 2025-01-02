@@ -8,8 +8,9 @@ from sklearn.ensemble import IsolationForest
 from sklearn.inspection import permutation_importance
 import pkg_resources
 
-    
-data = pd.read_csv("C:/Users/msı/Desktop/python.csv", encoding='ISO-8859-1')
+# Read data from the repository's CSV file
+data = pd.read_csv("Data.csv", encoding='ISO-8859-1')
+
 
 # Bin the "Age" column into 5-year intervals
 bins = range(0, data['Age'].max() + 5, 5)
