@@ -327,7 +327,7 @@ scikit-learn-intelex==20230426.121932
 scipy==1.10.1
 seaborn==0.12.2
 service-identity==18.1.0
-setuptools==68.0.0
+setuptools==75.6.0
 sip==6.6.2
 six==1.16.0
 smart-open==5.2.1
