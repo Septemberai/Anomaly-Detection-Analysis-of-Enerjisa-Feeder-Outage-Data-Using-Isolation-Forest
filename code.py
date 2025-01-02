@@ -314,10 +314,7 @@ class YourSystem:
 if "system" not in st.session_state:
     st.session_state.system = YourSystem()
 
-# Example UI
-feeder_names = ["Feeder1", "Feeder2", "Feeder3"]  # Dummy feeder names
-col1, col2 = st.columns(2)
-
+# First column: Feeder selection and maintenance
 with col1:
     st.subheader("Add to Maintenance List")
     if feeder_names:
@@ -328,12 +325,13 @@ with col1:
     else:
         st.info("No feeders require maintenance.")
 
+# Second column: Maintenance history
 with col2:
     st.subheader("Maintenance List")
     if not st.session_state.system.maintenance_done.empty:
         st.dataframe(st.session_state.system.maintenance_done)
     else:
-        st.write("No Feeder in Maintenance List.")
+        st.write("No Feeder in  Maintance List.")
 
 # List of specific packages to show in the display
 core_packages = [
