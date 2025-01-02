@@ -261,16 +261,17 @@ class MaintenanceSystem:
     def list_maintenance_required(self):
         return [f for f in self.feeders if f.needs_maintenance]
 
-    def perform_maintenance(self, feeder_name):
-        feeder = next((f for f in self.feeders if f.name == feeder_name and f.needs_maintenance), None)
-        if feeder:
-            feeder.needs_maintenance = False
-            self.feeders.remove(feeder)
-            # Add to maintenance_done with timestamp
-            self.maintenance_done = self.maintenance_done.append({
-                "Feeder": feeder_name,
-                "Timestamp": pd.Timestamp.now()
-            }, ignore_index=True)
+def perform_maintenance(self, feeder_name):
+    feeder = next((f for f in self.feeders if f.name == feeder_name and f.needs_maintenance), None)
+    if feeder:
+        feeder.needs_maintenance = False
+        self.feeders.remove(feeder)
+        # Add to maintenance_done with timestamp
+        new_data = pd.DataFrame([{
+            "Feeder": feeder_name,
+            "Timestamp": pd.Timestamp.now()
+        }])
+        self.maintenance_done = pd.concat([self.maintenance_done, new_data], ignore_index=True)
 
 
 # Create DataFrame from your actual feeder data
