@@ -319,7 +319,7 @@ with col2:
         st.write("No Feeder in Maintenance List.")
 
 
-st.header("Framework versions)
+st.header("Framework versions")
 # List of specific packages to show in the display
 core_packages = [
     "shap",
