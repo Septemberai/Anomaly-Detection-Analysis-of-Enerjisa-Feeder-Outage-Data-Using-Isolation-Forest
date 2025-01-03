@@ -310,12 +310,32 @@ with col1:
         st.info("No feeders require maintenance.")
 
 # Second column: Maintenance history
+col1, col2 = st.columns(2)
+
+# First column: Feeder selection and maintenance
+with col1:
+    st.subheader("Add to Maintenance List")
+    if feeder_names:
+        selected_feeder = st.selectbox("Select a Feeder:", feeder_names, key="feeder_selectbox")
+        if st.button("Add To List", key="maintenance_button"):
+            st.session_state.system.perform_maintenance(selected_feeder)
+            st.success(f"{selected_feeder} has been added to the maintenance list.")
+            if 'maintenance_list' not in st.session_state:
+                st.session_state.maintenance_list = pd.DataFrame(columns=["Feeder", "Timestamp"])
+            st.session_state.maintenance_list = st.session_state.maintenance_list.append({
+                "Feeder": selected_feeder,
+                "Timestamp": pd.Timestamp.now()
+            }, ignore_index=True)
+    else:
+        st.info("No feeders require maintenance.")
+
+# Second column: Maintenance history
 with col2:
     st.subheader("Maintenance List")
-    if not st.session_state.system.maintenance_done.empty:
-        st.dataframe(st.session_state.system.maintenance_done)
+    if 'maintenance_list' in st.session_state and not st.session_state.maintenance_list.empty:
+        st.dataframe(st.session_state.maintenance_list)
     else:
-        st.write("No Feeder in  Maintance List.")
+        st.write("No Feeder in Maintenance List.")
 
 
 st.header("Project Dependencies")
