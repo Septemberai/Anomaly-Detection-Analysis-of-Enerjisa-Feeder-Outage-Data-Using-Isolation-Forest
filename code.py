@@ -315,7 +315,7 @@ if 'maintenance_list' not in st.session_state:
     st.session_state.maintenance_list = []
 
 # Sample feeder names (replace with your actual feeder names)
-feeder_names = ['Feeder1', 'Feeder2', 'Feeder3']
+feeder_names = data["Feeder"]
 
 # First column: Feeder selection and maintenance
 col1, col2 = st.columns(2)
