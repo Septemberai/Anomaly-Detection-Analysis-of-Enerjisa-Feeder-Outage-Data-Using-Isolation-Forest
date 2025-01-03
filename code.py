@@ -332,11 +332,10 @@ with col1:
 # Second column: Maintenance history
 with col2:
     st.subheader("Maintenance List")
-    if 'maintenance_list' in st.session_state and not st.session_state.maintenance_list.empty:
-        st.dataframe(st.session_state.maintenance_list)
+    if not st.session_state.system.maintenance_done.empty:
+        st.dataframe(st.session_state.system.maintenance_done)
     else:
-        st.write("No Feeder in Maintenance List.")
-
+        st.write("No Feeder in  Maintance List.")
 
 st.header("Project Dependencies")
 st.write("""
