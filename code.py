@@ -227,46 +227,9 @@ Below, you can:
 """)
 
 
-# Create DataFrame from your actual feeder data
-data = pd.DataFrame({
-    "Feeder": data['Feeder'].unique()  # Using the feeders from your CSV file
-})
-
-# Initialize system with feeders from data
-if "system" not in st.session_state:
-    st.session_state.system = MaintenanceSystem()
-    unique_feeders = data['Feeder'].unique()
-    for feeder_name in unique_feeders:
-        st.session_state.system.add_feeder(Feeder(feeder_name))
-
-# Feeder selection and maintenance
-feeders_required = st.session_state.system.list_maintenance_required()
-feeder_names = [feeder.name for feeder in feeders_required]
-
-
-st.header("Feeder Maintenance Management System")
-st.write("""
-This system allows you to manage feeder maintenance tasks and view the maintenance history.
-Select feeders that need maintenance and track completed maintenance activities.
-""")
-
 # Create two columns for side-by-side display
 col1, col2 = st.columns(2)
 
-class YourSystem:
-    def __init__(self):
-        self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
-
-    def perform_maintenance(self, feeder):
-        if self.maintenance_done is None:
-            self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
-
-        new_data = {"Feeder": feeder, "Timestamp": pd.Timestamp.now()}
-        self.maintenance_done = pd.concat([self.maintenance_done, pd.DataFrame([new_data])], ignore_index=True)
-
-# Streamlit session state initialization
-if "system" not in st.session_state:
-    st.session_state.system = YourSystem()
 
 # First column: Feeder selection and maintenance
 with col1:
