@@ -311,8 +311,9 @@ with col1:
 with col2:
     st.subheader('Maintenance List')
     if 'selected_feed' in st.session_state and len(st.session_state.selected_feed) > 0:
-        maintenance_list = st.session_state.selected_feed
-        st.write(maintenance_list)
+        # Seçilen feederları bir tablo şeklinde göster
+        maintenance_list = pd.DataFrame(st.session_state.selected_feed, columns=["Feeder"])
+        st.table(maintenance_list)
     else:
         st.write("No Feeder in Maintenance List.")
 
