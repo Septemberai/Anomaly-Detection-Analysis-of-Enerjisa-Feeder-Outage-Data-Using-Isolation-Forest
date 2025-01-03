@@ -296,49 +296,23 @@ This system allows you to manage feeder maintenance tasks and view the maintenan
 Select feeders that need maintenance and track completed maintenance activities.
 """)
 
-# Create two columns for side-by-side display
+# Sütunları oluşturma
 col1, col2 = st.columns(2)
 
-class YourSystem:
-    def __init__(self):
-        self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
-
-    def perform_maintenance(self, feeder):
-        if self.maintenance_done is None:
-            self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
-
-        new_data = {"Feeder": feeder, "Timestamp": pd.Timestamp.now()}
-        self.maintenance_done = pd.concat([self.maintenance_done, pd.DataFrame([new_data])], ignore_index=True)
-
-# Initialize session state for maintenance list if not already done
-if 'maintenance_list' not in st.session_state:
-    st.session_state.maintenance_list = []
-
-# Sample feeder names (replace with your actual feeder names)
-feeder_names = data["Feeder"]
-
-# First column: Feeder selection and maintenance
-col1, col2 = st.columns(2)
-
+# 1. sütunda, Feeder listesi gösteriliyor
 with col1:
-    st.subheader("Add to Maintenance List")
-    if feeder_names:
-        selected_feeder = st.selectbox("Select a Feeder:", feeder_names)
-        if st.button("Add To List"):
-            if selected_feeder not in st.session_state.maintenance_list:
-                st.session_state.maintenance_list.append(selected_feeder)
-                st.success(f"{selected_feeder} has been added to the maintenance list.")
-            else:
-                st.warning(f"{selected_feeder} is already in the maintenance list.")
-    else:
-        st.info("No feeders require maintenance.")
+    st.subheader('Feeder List')
+    feeders = data["Feeder"].tolist()
+    selected_feed = st.multiselect("Select Feeders", feeders)
+    if st.button('Add To List'):
+        st.session_state.selected_feed = selected_feed
 
-# Second column: Maintenance history
+# 2. sütunda Maintenance List gösteriliyor
 with col2:
-    st.subheader("Maintenance List")
-    if st.session_state.maintenance_list:
-        df = pd.DataFrame(st.session_state.maintenance_list, columns=["Feeder"])
-        st.dataframe(df)
+    st.subheader('Maintenance List')
+    if 'selected_feed' in st.session_state and len(st.session_state.selected_feed) > 0:
+        maintenance_list = st.session_state.selected_feed
+        st.write(maintenance_list)
     else:
         st.write("No Feeder in Maintenance List.")
 
