@@ -7,9 +7,10 @@ import seaborn as sns
 from sklearn.ensemble import IsolationForest
 from sklearn.inspection import permutation_importance
 import pkg_resources
-import matplotlib
-    
-data = pd.read_csv("python.csv", encoding='ISO-8859-1')
+
+# Read data from the repository's CSV file
+data = pd.read_csv("Data.csv", encoding='ISO-8859-1')
+
 
 # Bin the "Age" column into 5-year intervals
 bins = range(0, data['Age'].max() + 5, 5)
@@ -260,16 +261,16 @@ class MaintenanceSystem:
     def list_maintenance_required(self):
         return [f for f in self.feeders if f.needs_maintenance]
 
-    def perform_maintenance(self, feeder_name):
-        feeder = next((f for f in self.feeders if f.name == feeder_name and f.needs_maintenance), None)
-        if feeder:
-            feeder.needs_maintenance = False
-            self.feeders.remove(feeder)
-            # Add to maintenance_done with timestamp
-            self.maintenance_done = self.maintenance_done.append({
-                "Feeder": feeder_name,
-                "Timestamp": pd.Timestamp.now()
-            }, ignore_index=True)
+def perform_maintenance(self, feeder_name):
+    feeder = next((f for f in self.feeders if f.name == feeder_name and f.needs_maintenance), None)
+    if feeder:
+        feeder.needs_maintenance = False
+        self.feeders.remove(feeder)
+        # Add to maintenance_done with timestamp
+        new_data = pd.DataFrame([{
+            "Feeder": feeder_name
+        }])
+        self.maintenance_done = pd.concat([self.maintenance_done, new_data], ignore_index=True)
 
 
 # Create DataFrame from your actual feeder data
@@ -298,19 +299,20 @@ Select feeders that need maintenance and track completed maintenance activities.
 # Create two columns for side-by-side display
 col1, col2 = st.columns(2)
 
-# First column: Feeder selection and maintenance
-with col1:
-    st.subheader("Add to Maintenance List")
-    if feeder_names:
-        selected_feeder = st.selectbox("Select a Feeder:", feeder_names, key="feeder_selectbox")
-        if st.button("Add To List", key="maintenance_button"):
-            st.session_state.system.perform_maintenance(selected_feeder)
-            st.success(f"{selected_feeder} has been added to the maintenance list.")
-    else:
-        st.info("No feeders require maintenance.")
+class YourSystem:
+    def __init__(self):
+        self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
 
-# Create two columns for side-by-side display
-col1, col2 = st.columns(2)
+    def perform_maintenance(self, feeder):
+        if self.maintenance_done is None:
+            self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
+
+        new_data = {"Feeder": feeder, "Timestamp": pd.Timestamp.now()}
+        self.maintenance_done = pd.concat([self.maintenance_done, pd.DataFrame([new_data])], ignore_index=True)
+
+# Streamlit session state initialization
+if "system" not in st.session_state:
+    st.session_state.system = YourSystem()
 
 # First column: Feeder selection and maintenance
 with col1:
@@ -330,16 +332,11 @@ with col2:
         st.dataframe(st.session_state.system.maintenance_done)
     else:
         st.write("No Feeder in  Maintance List.")
-st.header("Project Dependencies")
-st.write("""
-This section shows the core Python packages used in this project.
-You can download the requirements.txt file to replicate this environment.
-""")
 
-# List of imported packages to show in display
-imported_packages = [
+# List of specific packages to show in the display
+core_packages = [
     "shap",
-    "numpy", 
+    "numpy",
     "pandas",
     "streamlit",
     "matplotlib",
@@ -348,30 +345,15 @@ imported_packages = [
     "pkg_resources"
 ]
 
-# Get versions of imported packages for display
+# Get versions for display
 display_requirements = [
     f"{dist.key}=={dist.version}" 
     for dist in pkg_resources.working_set 
-    if dist.key in imported_packages
+    if dist.key in core_packages
 ]
 
-# Get all package versions for download
-all_requirements = [
-    f"{dist.key}=={dist.version}" 
-    for dist in pkg_resources.working_set
-]
-
-# Display only imported packages
+# Display only core packages
 st.code('\n'.join(display_requirements), language='text')
-
-# Add download button with all requirements
-if st.download_button(
-    label="Download requirements.txt",
-    data='\n'.join(all_requirements),
-    file_name='requirements.txt',
-    mime='text/plain'
-):
-    st.success('Successfully downloaded requirements.txt!')
 
 
 
@@ -381,5 +363,3 @@ st.markdown("""
     Please reach out to yusufff.poyraz@gmail.com if you have any questions or feedback.
 </div>
 """, unsafe_allow_html=True)
-
-
