@@ -268,8 +268,7 @@ def perform_maintenance(self, feeder_name):
         self.feeders.remove(feeder)
         # Add to maintenance_done with timestamp
         new_data = pd.DataFrame([{
-            "Feeder": feeder_name,
-            "Timestamp": pd.Timestamp.now()
+            "Feeder": feeder_name
         }])
         self.maintenance_done = pd.concat([self.maintenance_done, new_data], ignore_index=True)
 
