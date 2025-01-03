@@ -256,7 +256,7 @@ class MaintenanceSystem:
         self.maintenance_done = pd.DataFrame(columns=["Feeder", "Timestamp"])
 
     def add_feeder(self, feeder):
-        self.feeders.concat(feeder)
+        self.feeders.append(feeder)
 
     def list_maintenance_required(self):
         return [f for f in self.feeders if f.needs_maintenance]
