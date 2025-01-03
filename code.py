@@ -310,28 +310,37 @@ class YourSystem:
         new_data = {"Feeder": feeder, "Timestamp": pd.Timestamp.now()}
         self.maintenance_done = pd.concat([self.maintenance_done, pd.DataFrame([new_data])], ignore_index=True)
 
-# Streamlit session state initialization
-if "system" not in st.session_state:
-    st.session_state.system = YourSystem()
+# Initialize session state for maintenance list if not already done
+if 'maintenance_list' not in st.session_state:
+    st.session_state.maintenance_list = []
+
+# Sample feeder names (replace with your actual feeder names)
+feeder_names = ['Feeder1', 'Feeder2', 'Feeder3']
 
 # First column: Feeder selection and maintenance
+col1, col2 = st.columns(2)
+
 with col1:
     st.subheader("Add to Maintenance List")
     if feeder_names:
-        selected_feeder = st.selectbox("Select a Feeder:", feeder_names, key="feeder_selectbox")
-        if st.button("Add To List", key="maintenance_button"):
-            st.session_state.system.perform_maintenance(selected_feeder)
-            st.success(f"{selected_feeder} has been added to the maintenance list.")
+        selected_feeder = st.selectbox("Select a Feeder:", feeder_names)
+        if st.button("Add To List"):
+            if selected_feeder not in st.session_state.maintenance_list:
+                st.session_state.maintenance_list.append(selected_feeder)
+                st.success(f"{selected_feeder} has been added to the maintenance list.")
+            else:
+                st.warning(f"{selected_feeder} is already in the maintenance list.")
     else:
         st.info("No feeders require maintenance.")
 
 # Second column: Maintenance history
 with col2:
     st.subheader("Maintenance List")
-    if not st.session_state.system.maintenance_done.empty:
-        st.dataframe(st.session_state.system.maintenance_done)
+    if st.session_state.maintenance_list:
+        df = pd.DataFrame(st.session_state.maintenance_list, columns=["Feeder"])
+        st.dataframe(df)
     else:
-        st.write("No Feeder in  Maintance List.")
+        st.write("No Feeder in Maintenance List.")
 
 # List of specific packages to show in the display
 core_packages = [
