@@ -296,10 +296,10 @@ This system allows you to manage feeder maintenance tasks and view the maintenan
 Select feeders that need maintenance and track completed maintenance activities.
 """)
 
-# Sütunları oluşturma
+# Creating columns for layout
 col1, col2 = st.columns(2)
 
-# 1. sütunda, Feeder listesi gösteriliyor
+# In the first column, displaying the Feeder list
 with col1:
     st.subheader('Feeder List')
     feeders = data["Feeder"].tolist()
@@ -307,12 +307,13 @@ with col1:
     if st.button('Add To List'):
         st.session_state.selected_feed = selected_feed
 
-# 2. sütunda Maintenance List gösteriliyor
+# In the second column, displaying the Maintenance List
 with col2:
     st.subheader('Maintenance List')
     if 'selected_feed' in st.session_state and len(st.session_state.selected_feed) > 0:
-        # Seçilen feederları bir tablo şeklinde göster
+        # Convert selected feeders to a table with 1-based index
         maintenance_list = pd.DataFrame(st.session_state.selected_feed, columns=["Feeder"])
+        maintenance_list.index = maintenance_list.index + 1  # Start index from 1
         st.table(maintenance_list)
     else:
         st.write("No Feeder in Maintenance List.")
