@@ -309,7 +309,7 @@ with col1:
     else:
         st.info("No feeders require maintenance.")
 
-# Second column: Maintenance history
+# Create two columns for side-by-side display
 col1, col2 = st.columns(2)
 
 # First column: Feeder selection and maintenance
@@ -320,12 +320,6 @@ with col1:
         if st.button("Add To List", key="maintenance_button"):
             st.session_state.system.perform_maintenance(selected_feeder)
             st.success(f"{selected_feeder} has been added to the maintenance list.")
-            if 'maintenance_list' not in st.session_state:
-                st.session_state.maintenance_list = pd.DataFrame(columns=["Feeder", "Timestamp"])
-            st.session_state.maintenance_list = st.session_state.maintenance_list.append({
-                "Feeder": selected_feeder,
-                "Timestamp": pd.Timestamp.now()
-            }, ignore_index=True)
     else:
         st.info("No feeders require maintenance.")
 
@@ -336,7 +330,6 @@ with col2:
         st.dataframe(st.session_state.system.maintenance_done)
     else:
         st.write("No Feeder in  Maintance List.")
-
 st.header("Project Dependencies")
 st.write("""
 This section shows the core Python packages used in this project.
